@@ -29,7 +29,7 @@ function createImage(imageFilePath) {
     switch (ext) {
       case 'atr':
       case 'ATR':
-      diskImage = require('./type/atrimage.js')(filePath);
+      diskImage = require('./type/atr')(filePath);
       break;
 
       default:
