@@ -1,5 +1,5 @@
 {
-  "name": "atari-disk-image",
+  "name": "atarijs-disk-image",
   "version": "1.0.0",
   "description": "Atari 8-bit computer disk image library.",
   "main": "index.js",
