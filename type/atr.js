@@ -47,7 +47,7 @@ function createATRImage(imageFilePath) {
     try {
       image = require('fs').readFileSync(filePath);
 
-      var atrHeaderBytes = new Uint8Array(image.slice(0,ATR_HEADER_SIZE));
+      var atrHeaderBytes = new Uint8Array(image.slice(0, ATR_HEADER_SIZE));
       var signatureTest = (atrHeaderBytes[1] << 8) + atrHeaderBytes[0];
       if (signatureTest !== ATR_SIGNATURE) {
         image = null;
@@ -181,6 +181,16 @@ function createATRImage(imageFilePath) {
 
   disk.getSectorCount = function() {
     return sectorCount;
+  };
+
+
+  disk.isReadOnly = function() {
+    return driveStatus === DRIVE_STATUS_READONLY;
+  };
+
+
+  disk.getImageFilename = function() {
+    return imageFilePath ? require('path').basename(imageFilePath) : '';
   };
 
 

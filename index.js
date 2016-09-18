@@ -92,6 +92,17 @@ function createImage(imageFilePath) {
   };
 
 
+  image.isReadOnly = function() {
+    return diskImage.isReadOnly();
+  };
+
+
+  image.getImageFilename = function() {
+    return diskImage.getImageFilename();
+  };
+
+
+  // initialize drive
   if (imageFilePath) {
     image.loadImage(imageFilePath);
   }
