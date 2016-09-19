@@ -24,6 +24,24 @@ function createImage(imageFilePath) {
   };
 
 
+  image.exportImage = function() {
+    if (!diskImage) {
+      throw new Error('No disk image.');
+    }
+    return diskImage.exportImage();
+  };
+
+
+  image.importImage = function(image, filePath) {
+    return diskImage.importImage(image, filePath);
+  };
+
+
+  image.saveImage = function(filePath) {
+    diskImage.saveImage(filePath);
+  };
+
+
   image.loadImage = function(filePath, readOnly) {
     var ext = filePath.substr(filePath.lastIndexOf('.') + 1);
     switch (ext) {

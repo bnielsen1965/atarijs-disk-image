@@ -35,18 +35,51 @@ function createATRImage(imageFilePath) {
 
 
   disk.unloadImage = function() {
+    headerSize = ATR_HEADER_SIZE;
+    headerBytes = null;
+    signature = null;
     image = null;
+    bootSectorType = null;
+    sectorSize = null;
+    sectorCount = null;
     driveStatus = DRIVE_STATUS_NODISK;
   };
 
 
-  disk.loadImage = function(filePath, readOnly) {
+  disk.exportImage = function() {
+    var imageCopy = new Uint8Array(image.slice(0));
+    return imageCopy;
+  };
+
+
+  disk.importImage = function(image, filePath) {
+    disk._loadImage(image);
+    imageFilePath = filePath;
+  };
+
+
+  disk.saveImage = function(filePath) {
+    require('fs').writeFileSync(filePath || imageFilePath, image);
+  };
+
+
+  disk.loadImage = function(filePath) {
     // should unload to reset
     disk.unloadImage();
 
     try {
       image = require('fs').readFileSync(filePath);
+      disk._loadImage(image);
+      imageFilePath = filePath;
+    }
+    catch (e) {
+      throw new Error('Image load failed. ' + e.toString());
+    }
+  };
 
+
+  disk._loadImage = function(rawImage) {
+    try {
       var atrHeaderBytes = new Uint8Array(image.slice(0, ATR_HEADER_SIZE));
       var signatureTest = (atrHeaderBytes[1] << 8) + atrHeaderBytes[0];
       if (signatureTest !== ATR_SIGNATURE) {
@@ -54,10 +87,9 @@ function createATRImage(imageFilePath) {
         throw new Error('Image load failed. Invalid ATR image signature.');
       }
 
-      imageFilePath = filePath;
       headerBytes = atrHeaderBytes;
       signature = signatureTest;
-      driveStatus = (readOnly || headerBytes[15] ? DRIVE_STATUS_READONLY : DRIVE_STATUS_READWRITE);
+      driveStatus = (headerBytes[15] ? DRIVE_STATUS_READONLY : DRIVE_STATUS_READWRITE);
       bootSectorType = BOOT_SECTORS_LOGICAL;
       sectorSize = (headerBytes[5] << 8) + headerBytes[4];
       sectorCount = ((headerBytes[7] << 24) + (headerBytes[6] << 16) + (headerBytes[3] << 8) + headerBytes[2]) >> 3;
