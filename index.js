@@ -97,7 +97,7 @@ function createImage(imageFilePath) {
       throw new Error('No disk image.');
     }
 
-    return diskImage.getSectorSize();
+    return diskImage.getSectorSize(sectorNumber);
   };
 
 
