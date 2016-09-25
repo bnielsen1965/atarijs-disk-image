@@ -80,6 +80,7 @@ function createATRImage(imageFilePath) {
 
   disk._loadImage = function(rawImage) {
     try {
+      image = rawImage;
       var atrHeaderBytes = new Uint8Array(image.slice(0, ATR_HEADER_SIZE));
       var signatureTest = (atrHeaderBytes[1] << 8) + atrHeaderBytes[0];
       if (signatureTest !== ATR_SIGNATURE) {

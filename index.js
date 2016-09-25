@@ -33,6 +33,18 @@ function createImage(imageFilePath) {
 
 
   image.importImage = function(image, filePath) {
+    // load an empty image
+    var ext = filePath.substr(filePath.lastIndexOf('.') + 1);
+    switch (ext) {
+      case 'atr':
+      case 'ATR':
+      diskImage = require('./type/atr')();
+      break;
+
+      default:
+      throw new Error('Load image failed, unknown file extension type.');
+    }
+    
     return diskImage.importImage(image, filePath);
   };
 
